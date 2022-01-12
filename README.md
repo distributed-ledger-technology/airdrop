@@ -8,5 +8,23 @@ The following example airdrop drops [1 MannheimCoin on Ropsten](https://ropsten.
 deno run --allow-net example-airdrops/launch-airdrop-for-wwi19seb.ts <your provider url - e.g. from infura.io or via an own ethereum node>
 ```
 
+## Background Info for Solidity Smart Contract Newbies
+The solidity smart contract which defines the ERC20 based MannheimCoin Currency looks as follows: 
+
+```sol
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.8.0 < 0.9.0;
+
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.4/contracts/token/ERC20/ERC20.sol";
+
+contract MannheimCoin is ERC20 { 
+    
+    constructor () ERC20("MannheimCoin", "MANN") { 
+        _mint(msg.sender, 2000*10**18);
+    }
+    
+}
+```
+
 ## Contributions are Welcome
 Feel free to raise issues and to open Pull Requests.
