@@ -24,7 +24,10 @@ contract MannheimCoin is ERC20 {
     }
     
 }
-```
+```  
+
+This smart contract was developed and deployed to [Ropsten](https://ropsten.etherscan.io/address/0x7910f84868488da3377833ccaa0e5b2b42edd9a6) using the [remix online IDE](https://remix.ethereum.org/)
+
 
 ## Contributions are Welcome
 Feel free to raise issues and to open Pull Requests.
