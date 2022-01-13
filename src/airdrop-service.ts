@@ -2,10 +2,8 @@
 
 import Web3 from 'https://deno.land/x/web3/mod.ts'
 
-// import _Common from 'https://jspm.dev/@ethereumjs/common'
-// const Common = (_Common as any).default
-
-// console.log(Common)
+import _Common from 'https://jspm.dev/@ethereumjs/common'
+const Common = (_Common as any).default
 
 export class AirdropService {
 
@@ -18,8 +16,8 @@ export class AirdropService {
 
     public constructor(providerURL: string, currencyContractAddress: string, currencyContractABI: any, private airdropAmountPerRecipient: number, private privateKeySender: string) {
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerURL))
+        this.web3.eth.defaultCommon = new Common({chain: "ropsten"})
         this.currencyContract = new this.web3.eth.Contract(currencyContractABI, currencyContractAddress)
-        console.log(this.web3.eth.Contract)
     }
 
     public async executeAirdrop(recipients: string[]): Promise<void> {
@@ -52,40 +50,30 @@ export class AirdropService {
         // const gasEstimated = this.currencyContract.methods.transfer(recipient, this.airdropAmountPerRecipient).es();
         const noncePreviousTAOfSender = await this.web3.eth.getTransactionCount("0xa59a1e45a880504fc8a4D947702AaB6067DFEa71")
 
-        // const commonInstance = new Common({ chain: { baseChain: "ropsten" as any, networkId: 3, customChain: { name: "ropsten" as any, networkId: 3, chainId: 3 } } })
-        // const commonInstance = new Common({ networkId: 3, genesis: "genesis", hardforks: "hardforks", bootstrapNodes: "bootstrapNodes" })
-
         let rawTx = {
-            "nonce": this.web3.utils.toHex(noncePreviousTAOfSender),
+            "nonce": noncePreviousTAOfSender,
             "gasLimit": this.web3.utils.toHex(gasEstimation),
             "gasPrice": this.web3.utils.toHex(medianGasPricePreviousBlocks),
             "from": "0xa59a1e45a880504fc8a4D947702AaB6067DFEa71",
-            "to": recipient,
+            "to": "0x7910F84868488DA3377833ccaA0E5b2B42eDd9a6", // send transaction to contract
             "value": "0x00",
             "data": data,
-            "chainId": "0x3",
-            // "common": commonInstance
+            "chainId": 3 // use ropsten testnet
         }
-        // const tx = new Tx(rawTx)
-        // tx.sign(this.privateKeySender)
-        // let serializedTx = "0x" + tx.serialize().toString('hex');
-
-        console.log(this.privateKeySender)
         console.log(rawTx)
-        const signedTransaction = await this.web3.eth.accounts.sign(rawTx as any, this.privateKeySender)
+
+        const signedTransaction = await this.web3.eth.accounts.signTransaction(rawTx, this.privateKeySender)
         console.log(signedTransaction)
 
-        this.web3.eth.sendSignedTransaction((signedTransaction as any).messageHash as string)
+        this.web3.eth.sendSignedTransaction(signedTransaction.rawTransaction as string)
             .on('transactionHash', function (txHash) {
                 console.log(`transactionHash event: ${txHash}`)
             }).on('receipt', function (receipt) {
-                console.log("receipt:" + receipt);
-            }).on('confirmation', function (confirmationNumber, receipt) {
-                console.log("confirmationNumber:" + confirmationNumber + " receipt:" + receipt);
-            }).on('error', function (error) {
-                console.log(`the following error occurred: ${error}`)
-            });
-
+            console.log("receipt:" + JSON.stringify(receipt));
+        }).on('confirmation', function (confirmationNumber, receipt) {
+            console.log("confirmationNumber:" + confirmationNumber + " receipt:" + JSON.stringify(receipt));
+        }).on('error', function (error) {
+            console.log(`the following error occurred: ${error}`)
+        });
     }
 }
-
