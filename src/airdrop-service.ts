@@ -72,19 +72,19 @@ export class AirdropService {
 
         console.log(this.privateKeySender)
         console.log(rawTx)
-        const signedTransaction = await this.web3.eth.accounts.sign(rawTx, this.privateKeySender)
+        const signedTransaction = await this.web3.eth.accounts.sign(rawTx as any, this.privateKeySender)
         console.log(signedTransaction)
 
-        // this.web3.eth.sendSignedTransaction(signedTransaction.transactionHash as string)
-        //     .on('transactionHash', function (txHash) {
-        //         console.log(`transactionHash event: ${txHash}`)
-        //     }).on('receipt', function (receipt) {
-        //         console.log("receipt:" + receipt);
-        //     }).on('confirmation', function (confirmationNumber, receipt) {
-        //         console.log("confirmationNumber:" + confirmationNumber + " receipt:" + receipt);
-        //     }).on('error', function (error) {
-        //         console.log(`the following error occurred: ${error}`)
-        //     });
+        this.web3.eth.sendSignedTransaction((signedTransaction as any).messageHash as string)
+            .on('transactionHash', function (txHash) {
+                console.log(`transactionHash event: ${txHash}`)
+            }).on('receipt', function (receipt) {
+                console.log("receipt:" + receipt);
+            }).on('confirmation', function (confirmationNumber, receipt) {
+                console.log("confirmationNumber:" + confirmationNumber + " receipt:" + receipt);
+            }).on('error', function (error) {
+                console.log(`the following error occurred: ${error}`)
+            });
 
     }
 }

@@ -67,14 +67,6 @@
     console.log(JSON.stringify(accounts));
   }
 
-  async function approve() {
-    // txHash is a hex string
-    // As with any RPC call, it may throw an error
-    // const txHash = await ethereum.request({
-    //   method: "approve",
-    //   params: [transactionParameters],
-    // });
-  }
   function connect() {
     provider
       .request({ method: "eth_requestAccounts" })
@@ -90,19 +82,31 @@
       });
   }
 
-  function send(recipient) {
+  async function send(recipient) {
     alert(`sending 1 MANN to ${recipient}`);
+
+    const data = this.currencyContract.methods
+      .transfer(recipient, this.airdropAmountPerRecipient)
+      .encodeABI();
 
     const transactionParameters = {
       nonce: "0x00", // ignored by MetaMask
-      gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
-      gas: "0x2710", // customizable by user during MetaMask confirmation.
-      to: "0x0000000000000000000000000000000000000000", // Required except during contract publications.
+      gasPrice: "0x182142c4e", // customizable by user during MetaMask confirmation.
+      gas: "0x21000", // customizable by user during MetaMask confirmation.
+      // gasLimit: "0xcc60",
+      to: recipient, // Required except during contract publications.
       from: ethereum.selectedAddress, // must match user's active address.
       value: "0x00", // Only required to send ether to the recipient from the initiating external account.
       data: "0x7f7465737432000000000000000000000000000000000000000000000000000000600057", // Optional, but used for defining smart contract creation and interaction.
       chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
     };
+
+    const txHash = await ethereum.request({
+      method: "eth_sendTransaction",
+      params: [transactionParameters],
+    });
+
+    alert(`txHash: ${txHash}`);
   }
 </script>
 
