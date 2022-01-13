@@ -1,5 +1,6 @@
-import { AirdropService } from "./airdrop-service.ts"
+
 import { mannheimCoinABI } from "../example-abis/ropsten-0x7910f84868488da3377833ccaa0e5b2b42edd9a6.ts"
+import { AirdropService } from "../src/airdrop-service.ts";
 
 const airdropRecipients = [
     "0x1513D4cCaC767d9510947cd8A0411b3A8E2c31AF",
@@ -29,6 +30,7 @@ const airdropRecipients = [
 ]
 
 const providerURL = Deno.args[0]
-const airdropService = new AirdropService(providerURL, "0x7910F84868488DA3377833ccaA0E5b2B42eDd9a6", mannheimCoinABI, 1)
+const privateKeySender = Deno.args[1]
+const airdropService = new AirdropService(providerURL, "0x7910F84868488DA3377833ccaA0E5b2B42eDd9a6", mannheimCoinABI, 1, privateKeySender)
 
 await airdropService.executeAirdrop(airdropRecipients)
