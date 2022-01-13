@@ -2,6 +2,11 @@
 
 import Web3 from 'https://deno.land/x/web3/mod.ts'
 
+// import _Common from 'https://jspm.dev/@ethereumjs/common'
+// const Common = (_Common as any).default
+
+// console.log(Common)
+
 export class AirdropService {
 
     private web3: Web3
@@ -14,6 +19,7 @@ export class AirdropService {
     public constructor(providerURL: string, currencyContractAddress: string, currencyContractABI: any, private airdropAmountPerRecipient: number, private privateKeySender: string) {
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerURL))
         this.currencyContract = new this.web3.eth.Contract(currencyContractABI, currencyContractAddress)
+        console.log(this.web3.eth.Contract)
     }
 
     public async executeAirdrop(recipients: string[]): Promise<void> {
@@ -46,14 +52,19 @@ export class AirdropService {
         // const gasEstimated = this.currencyContract.methods.transfer(recipient, this.airdropAmountPerRecipient).es();
         const noncePreviousTAOfSender = await this.web3.eth.getTransactionCount("0xa59a1e45a880504fc8a4D947702AaB6067DFEa71")
 
+        // const commonInstance = new Common({ chain: { baseChain: "ropsten" as any, networkId: 3, customChain: { name: "ropsten" as any, networkId: 3, chainId: 3 } } })
+        // const commonInstance = new Common({ networkId: 3, genesis: "genesis", hardforks: "hardforks", bootstrapNodes: "bootstrapNodes" })
+
         let rawTx = {
-            "nonce": noncePreviousTAOfSender,
-            "gasPrice": medianGasPricePreviousBlocks,
+            "nonce": this.web3.utils.toHex(noncePreviousTAOfSender),
             "gasLimit": this.web3.utils.toHex(gasEstimation),
+            "gasPrice": this.web3.utils.toHex(medianGasPricePreviousBlocks),
+            "from": "0xa59a1e45a880504fc8a4D947702AaB6067DFEa71",
             "to": recipient,
             "value": "0x00",
             "data": data,
-            // "common": { baseChain: "ropsten", customChain: { name: "ropsten", networkId: 3, chainId: 3 } }
+            "chainId": "0x3",
+            // "common": commonInstance
         }
         // const tx = new Tx(rawTx)
         // tx.sign(this.privateKeySender)
@@ -61,7 +72,7 @@ export class AirdropService {
 
         console.log(this.privateKeySender)
         console.log(rawTx)
-        const signedTransaction = await this.web3.eth.accounts.signTransaction(rawTx, this.privateKeySender)
+        const signedTransaction = await this.web3.eth.accounts.sign(rawTx, this.privateKeySender)
         console.log(signedTransaction)
 
         // this.web3.eth.sendSignedTransaction(signedTransaction.transactionHash as string)
