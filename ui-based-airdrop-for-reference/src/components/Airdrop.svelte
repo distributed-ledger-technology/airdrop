@@ -12,6 +12,7 @@
   let complete = false;
 
   const airdropRecipients = [
+    "0x35B00640dF68489856c94c618A0F9fE7db383250",
     "0x1513D4cCaC767d9510947cd8A0411b3A8E2c31AF",
     "0x944Cd9E2a19C84FA3DfbcFF7F0cbDAC5d335406c",
     "0x5ebde6A2B67274847F8B509B5e51adb0F1c17515",

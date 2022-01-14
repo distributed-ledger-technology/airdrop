@@ -3,7 +3,6 @@ import { quinoaCoinABI } from "../example-abis/ropsten-0x4fF2483B9a8bfF72f849ee4
 import { AirdropService } from "../src/airdrop-service.ts";
 
 const airdropRecipients = [
-    "0x35B00640dF68489856c94c618A0F9fE7db383250",
     "0x1513D4cCaC767d9510947cd8A0411b3A8E2c31AF",
     "0x944Cd9E2a19C84FA3DfbcFF7F0cbDAC5d335406c",
     "0x5ebde6A2B67274847F8B509B5e51adb0F1c17515",
@@ -27,6 +26,7 @@ const airdropRecipients = [
     "0xFC0Cc4e4E913cd95c3980F2ec2Cb72287aaedaCD",
     "0x96FD355847401D77c6F00be4663DAC5C47eeE94E",
     "0xa572f251DDF9E56F6217CF1c337b245B004F7fB3",
+    "0x35B00640dF68489856c94c618A0F9fE7db383250",
     "0xD0E879Dd9F37aD2db610D424Af4450c69001c0ba"
 ]
 

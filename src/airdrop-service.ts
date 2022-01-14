@@ -36,7 +36,6 @@ export class AirdropService {
 
         for (const recipient of recipients) {
             await this.transferAirdropAmount(recipient, gasEstimationForTransaction, medianGasPricePreviousBlocks)
-            return
         }
 
     }
