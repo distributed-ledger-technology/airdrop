@@ -14,9 +14,9 @@ export class AirdropService {
     private currencyName: number = 0
 
 
-    public constructor(providerURL: string, currencyContractAddress: string, currencyContractABI: any, private airdropAmountPerRecipient: number, private privateKeySender: string) {
+    public constructor(providerURL: string, private currencyContractAddress: string, currencyContractABI: any, private airdropAmountPerRecipient: number, private privateKeySender: string) {
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerURL))
-        this.web3.eth.defaultCommon = new Common({chain: "ropsten"})
+        this.web3.eth.defaultCommon = new Common({ chain: "ropsten" })
         this.currencyContract = new this.web3.eth.Contract(currencyContractABI, currencyContractAddress)
     }
 
@@ -55,7 +55,7 @@ export class AirdropService {
             "gasLimit": this.web3.utils.toHex(gasEstimation),
             "gasPrice": this.web3.utils.toHex(medianGasPricePreviousBlocks),
             "from": "0xa59a1e45a880504fc8a4D947702AaB6067DFEa71",
-            "to": "0x7910F84868488DA3377833ccaA0E5b2B42eDd9a6", // send transaction to contract
+            "to": this.currencyContractAddress, // send transaction to contract
             "value": "0x00",
             "data": data,
             "chainId": 3 // use ropsten testnet
@@ -69,11 +69,11 @@ export class AirdropService {
             .on('transactionHash', function (txHash) {
                 console.log(`transactionHash event: ${txHash}`)
             }).on('receipt', function (receipt) {
-            console.log("receipt:" + JSON.stringify(receipt));
-        }).on('confirmation', function (confirmationNumber, receipt) {
-            console.log("confirmationNumber:" + confirmationNumber + " receipt:" + JSON.stringify(receipt));
-        }).on('error', function (error) {
-            console.log(`the following error occurred: ${error}`)
-        });
+                console.log("receipt:" + JSON.stringify(receipt));
+            }).on('confirmation', function (confirmationNumber, receipt) {
+                console.log("confirmationNumber:" + confirmationNumber + " receipt:" + JSON.stringify(receipt));
+            }).on('error', function (error) {
+                console.log(`the following error occurred: ${error}`)
+            });
     }
 }
